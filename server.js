@@ -1,17 +1,20 @@
-const PORT = "8000";
+//npm dependencies
 const axios = require("axios");
 const cheerio = require("cheerio");
-const { log } = require("console");
 const express = require("express");
 
+//start express
 const app = express();
-const siteUrl = "https://www.ynet.co.il/home/0,7340,L-8,00.html";
 
+//get data from ynet
+const siteUrl = "https://www.ynet.co.il/home/0,7340,L-8,00.html";
 axios(siteUrl)
   .then((res) => {
     const html = res.data;
     const $ = cheerio.load(html);
     const articles = [];
+
+    // get news title sub title and url
     $(".slotTitle", html).each((inx, elm) => {
       const title = $(elm).find("span").text();
       const subTitle = $(elm).siblings(".slotSubTitle").text();
@@ -30,6 +33,8 @@ axios(siteUrl)
   })
   .catch((err) => console.log(err));
 
+//listen to the server
+const PORT = "8000";
 app.listen(PORT, () => {
   console.log(`server running on ${PORT}`);
 });
